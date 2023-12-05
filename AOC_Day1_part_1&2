@@ -32,7 +32,7 @@ for line in data:
     line = line.replace("six",'s6x')
     line = line.replace("seven",'s7n')
     line = line.replace("eight",'e8t')
-    line = line.replace("nine",'n9n')
+    line = line.replace("nine",'n9e')
     num_1 = 0
     num_2 = 0
     for i in range(len(line)):
