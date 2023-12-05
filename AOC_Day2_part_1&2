@@ -1,4 +1,4 @@
-with open("/Users/robin/Documents/AOC (2023)/AOC_D2.txt") as file:
+with open("/Users/robin/Documents/AOC (2023)/AOC_D2.txt", 'r') as file:
     data = file.readlines()
 
 games = []
