@@ -1,0 +1,48 @@
+with open("/Users/robin/Documents/AOC (2023)/AOC_D2.txt") as file:
+    data = file.readlines()
+
+games = []
+for line in data:
+    games.append(line.split(': ')[1].split('; '))
+mr = 12
+mg = 13
+mb = 14
+
+game_ind = []
+for i,game in enumerate(games):
+    good = True
+    for hand in game:
+        cubes = hand.split(', ')
+        for cube in cubes:
+            if 'green' in cube and int(cube[:2]) <=mg:
+                pass
+            elif 'red' in cube and int(cube[:2]) <=mr:
+                pass
+            elif 'blue' in cube and int(cube[:2]) <=mb:
+                pass
+            else:
+                good = False
+
+    if good ==True:
+        game_ind.append(i+1)
+print(sum(game_ind))
+
+power_sum = 0
+for game in games:
+    r = 0
+    g = 0
+    b = 0
+    for hand in game:
+        cubes = hand.split(', ')
+        for cube in cubes:
+            if 'green' in cube and int(cube[:2])>g:
+                g = int(cube[:2])
+            elif 'red' in cube and int(cube[:2])>r:
+                r = int(cube[:2])
+            elif 'blue' in cube and int(cube[:2])>b:
+                b = int(cube[:2])
+            else:
+                pass
+    power_sum += r*g*b
+print(power_sum)
+
