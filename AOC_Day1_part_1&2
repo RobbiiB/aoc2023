@@ -1,8 +1,8 @@
 with open("/Users/robin/Documents/AOC (2023)/AOC_D1.txt", 'r') as file:
     data = file.readlines()
 
+#part 1
 sum = 0
-
 for line in data:
     num_1 = 0
     num_2 = 0
@@ -21,7 +21,7 @@ for line in data:
 print(sum)
 
 
-
+#part 2
 sum_2=0
 for line in data:
     line = line.replace("one",'o1e')
