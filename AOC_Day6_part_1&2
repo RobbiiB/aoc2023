@@ -1,0 +1,32 @@
+# need to reformat the input file to have tabs instead of spaces
+
+with open("/Users/robin/Documents/AOC (2023)/AOC_D6.txt","r") as file: 
+    data = file.readlines()
+
+#part 1
+times = list(map(int,data[0].replace('\n','').split('\t')[1:]))
+distances = list(map(int,data[1].split('\t')[1:]))
+margin_off_err=1
+for time,dist in zip(times,distances):
+    posibilities = 0
+    for i in range(time):
+        d=(time-i)*i
+        if d>dist:
+            posibilities+=1
+    margin_off_err*=posibilities
+print(margin_off_err)
+
+#part 2
+time = int(data[0].replace('\t','').replace('\n','').split(':')[1])
+distance = int(data[1].replace('\t','').split(':')[1])
+posibilities = 0
+ranges = list(range(time//2))[::-1]
+for i in ranges:
+    d = (time-i)*i
+    if d<distance:
+        break
+    else:
+        posibilities+=1
+posibilities*=2
+posibilities+=1
+print(posibilities)
