@@ -1,0 +1,79 @@
+with open("/Users/robin/Documents/AOC (2023)/AOC_D3.txt", 'r') as file:
+    grid = file.readlines()
+    data = ''
+    for row in grid:
+        data = data + row[:-1]
+
+symbols = ['*', '-', '%', '$', '=', '@', '#', '/', '&', '+']
+row_len = grid[0].index('\n')
+tot_len = len(data)
+num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+masked_num_str = ''.join('1' if ele in num_list else '0' for ele in data)
+masked_sym_str = ''.join('1' if ele in symbols else '0' for ele in data)
+masked_gear_str = ''.join('1' if ele == '*' else '0' for ele in data)
+masked_sym_num = int(masked_sym_str, base=2)
+masked_gear_num = int(masked_gear_str, base=2)
+
+
+
+# part 1
+sym_checker_three = 31 + 2 ** row_len + 2 ** (row_len + 4) + 2 ** (2 * row_len) + 2 ** (2 * row_len + 1) + 2 ** (
+        2 * row_len + 2) + 2 ** (2 * row_len + 3) + 2 ** (2 * row_len + 4)
+sym_checker_two = 15 + 2 ** row_len + 2 ** (row_len + 3) + 2 ** (2 * row_len) + 2 ** (2 * row_len + 1) + 2 ** (
+        2 * row_len + 2) + 2 ** (2 * row_len + 3)
+sym_checker_one = 7 + 2 ** row_len + 2 ** (row_len + 2) + 2 ** (2 * row_len) + 2 ** (2 * row_len + 1) + 2 ** (
+        2 * row_len + 2)
+
+sum_1 = 0
+for i in range(tot_len):
+    if masked_num_str[-i] == '1' and masked_num_str[-i - 1] == '1' and masked_num_str[-i + 1] == '1':
+        if masked_sym_num & ((sym_checker_three << (i)) >> (row_len + 3)) != 0:
+            sum_1 += int(data[-i - 1] + data[-i] + data[-i + 1])
+    elif masked_num_str[-i] == '1' and masked_num_str[-i - 1] == '1' and masked_num_str[-i + 1] == '0' and \
+            masked_num_str[-i - 2] == '0':
+        if masked_sym_num & ((sym_checker_two << (i)) >> (row_len + 2)) != 0:
+            sum_1 += int(data[-i - 1] + data[-i])
+    elif masked_num_str[-i] == '1' and masked_num_str[-i - 1] == '0' and masked_num_str[-i + 1] == '0':
+        if masked_sym_num & ((sym_checker_one << (i)) >> (row_len + 2)) != 0:
+            sum_1 += int(data[-i])
+print(sum_1)
+
+
+
+# part 2
+def checking_nums(i):
+    return [i - row_len - 3, i - row_len - 2, i - row_len - 1, i - row_len, i - row_len + 1, i - row_len + 2,
+            i - row_len + 3,
+            i - 3, i - 2, i - 1,i, i + 1, i + 2, i + 3,
+            i + row_len - 3, i + row_len - 2, i + row_len - 1, i + row_len, i + row_len + 1, i + row_len + 2,
+            i + row_len + 3]
+
+checker_bit = 0b1
+sum_2 = []
+for i in range(tot_len):
+    if checker_bit & masked_gear_num != 0:
+        adjacent_nums = 0
+        products = 1
+        for j in checking_nums(i):
+            if masked_num_str[-j] == '1' and masked_num_str[-j - 1] == '1' and masked_num_str[-j + 1] == '1':
+                #print(bin((sym_checker_one << (j)) >> (row_len + 2))[::-1])
+                if checker_bit & ((sym_checker_three << (j)) >> (row_len + 3)) != 0:
+                    products *= int(data[-j - 1] + data[-j] + data[-j + 1])
+                    adjacent_nums += 1
+            elif masked_num_str[-j] == '1' and masked_num_str[-j - 1] == '1' and masked_num_str[-j + 1] == '0' and \
+                masked_num_str[-j - 2] == '0':
+                #print(bin((sym_checker_one << (j)) >> (row_len + 2))[::-1])
+                if checker_bit & ((sym_checker_two << (j)) >> (row_len + 2)) != 0:
+                    products *= int(data[-j - 1] + data[-j])
+                    adjacent_nums += 1
+            elif masked_num_str[-j] == '1' and masked_num_str[-j - 1] == '0' and masked_num_str[-j + 1] == '0':
+                if checker_bit & ((sym_checker_one << (j)) >> (row_len + 2)) != 0:
+                    products *= int(data[-j])
+                    adjacent_nums += 1
+        if adjacent_nums == 2:
+            sum_2.append(products)
+    checker_bit = checker_bit << 1
+
+
+print(sum(sum_2))
