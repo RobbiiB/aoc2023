@@ -1,0 +1,39 @@
+with open("/Users/robin/Documents/AOC (2023)/AOC_D9.txt","r") as file:
+    lines = file.readlines()
+    data = []
+    for row in lines:
+        row = list(map(int,row.replace('\n','').split(' ')))
+        data.append(row)
+
+extrapolated_values = []
+extrapolated_values_2 = []
+
+def find_diff_list(list):
+    new_list=[list[i+1]-list[i] for i in range(len(list)-1)]
+    return new_list
+
+def check_if_all_zeros(list):
+    for element in list:
+        if element != 0:
+            return True
+        else:
+            pass
+    return False
+
+for measurements in data:
+    weird_list = [measurements]
+    falsify=True
+    while falsify:
+        new_list = find_diff_list(weird_list[-1])
+        weird_list.append(list(new_list))
+        falsify = check_if_all_zeros(new_list)
+    part_1 = 0
+    part_2 = 0
+    for last_measures in weird_list[::-1]:
+        part_1+=last_measures[-1]
+        part_2=last_measures[0]-part_2
+    extrapolated_values.append(part_1)
+    extrapolated_values_2.append(part_2)
+
+print(f'Part 1: {sum(extrapolated_values)}')
+print(f'Part 2: {sum(extrapolated_values_2)}')
