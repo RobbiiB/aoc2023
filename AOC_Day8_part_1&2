@@ -1,0 +1,64 @@
+with open("/Users/robin/Documents/AOC (2023)/AOC_D8.txt", "r") as file:
+    data = file.readlines()
+
+instructions = list(data[0].replace('\n', ''))
+dict = {}
+for row in data[2:]:
+    node = row.split(' = ')[0]
+    neighbours = row.replace('\n', '').split(' = ')[1][1:-1].split(', ')
+    dict[node] = neighbours
+
+# part 1
+i = 0
+distance = 1
+node = dict['AAA']
+while True:
+    if instructions[i]=="L":
+        new_node = node[0]
+    else:
+        new_node = node[1]
+    i+=1
+    i %=len(instructions)
+    if new_node == "ZZZ":
+        print(distance)
+        break
+    node = dict[new_node]
+    distance+=1
+
+
+# part 2
+def gcd(a,b):
+    while b:
+        a,b = b,a%b
+    return a
+
+def lcm(a,b):
+    return (a*b)//gcd(a,b)
+
+def lcm_of_all(list):
+    while len(list)>1:
+        lcm_last_two = lcm(list[-1],list[-2])
+        list = list[:-2]
+        list.append(lcm_last_two)
+    print(list[0])
+
+i = 0
+starting_nodes = [dict[node] for node in dict if node[-1] == "A"]
+distances = [1 for _ in starting_nodes]
+
+for j,nodes in enumerate(starting_nodes):
+    node = nodes
+    while True:
+        if instructions[i] == "L":
+            new_node = node[0]
+        else:
+            new_node = node[1]
+        i += 1
+        i %= len(instructions)
+        if new_node[-1] == "Z":
+            break
+        node = dict[new_node]
+        distances[j] += 1
+
+lcm_of_all(distances)
+
