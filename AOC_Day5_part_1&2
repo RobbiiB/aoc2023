@@ -1,0 +1,66 @@
+with open("/Users/robin/Documents/AOC (2023)/AOC_D5.txt", 'r') as file:
+    data = file.read()
+
+data = data.split('\n\n')
+seeds = data[0].split(' ')[1:]
+
+#part 1
+location = list(map(int,seeds))
+maps = []
+for map_in_maps in data[1:]:
+    maps.append(map_in_maps.split('\n')[1:])
+
+for map_in_maps in maps:
+    transformed_arr = location.copy()
+    for transform in map_in_maps:
+        transform = list(map(int,transform.split(' ')))
+        for loc in location:
+            if loc<int(transform[1])+int(transform[2]) and loc>=int(transform[1]):
+                idx = location.index(loc)
+                transformed_arr[idx]+=int(transform[0])-int(transform[1])
+            else:
+                pass
+    location = transformed_arr
+print(min(location))
+
+#part 2
+seeds_2 = list(map(int,seeds))
+seed_list = []
+for i in range(len(seeds_2)):
+    if i%2==0:
+        pass
+    else:
+        seed_list.append([seeds_2[i-1],seeds_2[i-1]+seeds_2[i]-1])
+
+for map_in_maps in maps:
+    changed_list=[]
+    for transform in  map_in_maps:
+        transform = list(map(int, transform.split(' ')))
+        start = transform[1]
+        end  = transform[1]+transform[2]
+        shift = transform[0]-transform[1]
+        for seed in seed_list[::-1]:
+            if seed[0]>=start and seed[1]<end:
+                changed_list.append([seed[0]+shift,seed[1]+shift])
+                seed_list.remove(seed)
+            elif seed[0]>=start and seed[0]<end:
+                changed_list.append([seed[0]+shift,end+shift-1])
+                seed_list.remove(seed)
+                seed_list = [[end,seed[1]]]+seed_list
+            elif seed[1]>=start and seed[1]<end:
+                changed_list.append([start+shift,seed[1]+shift])
+                seed_list.remove(seed)
+                seed_list = [[seed[0],start-1]]+seed_list
+            elif seed[0]<start and seed[1]>=end:
+                changed_list.append([transform[0],end+shift-1])
+                seed_list.remove(seed)
+                seed_list = [[seed[0],start-1],[end,seed[1]]]+seed_list
+            else:
+                pass
+    seed_list = seed_list+changed_list
+
+lowest_seed = float('inf')
+for seed in seed_list:
+    if seed[0]<lowest_seed:
+        lowest_seed=seed[0]
+print(lowest_seed)
