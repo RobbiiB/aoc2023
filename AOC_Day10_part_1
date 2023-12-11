@@ -1,0 +1,72 @@
+with open("/Users/robin/Documents/AOC (2023)/AOC_D10.txt","r") as file:
+    lines = file.readlines()
+    grid = []
+    for i,line in enumerate(lines):
+        grid.append(list(line.replace('\n','')))
+        for j,val in enumerate(line):
+            if val =="S":
+                start = [i,j]
+
+#part 1
+dict = {
+    "S": ["U","R","D","L","S"],
+    "|": ["U","D"],
+    "-": ["R","L"],
+    "L": ["U","R"],
+    "J": ["U","L"],
+    "7": ["D","L"],
+    "F": ["R","D"],
+    ".": [],
+    "#": ["U","R","D","L"]
+}
+not_start = True
+first_move = True
+distance = 0
+node = dict["S"]
+pos = start
+go_back = "S"
+
+while not_start:
+    node.remove(go_back)
+    move = node[0]
+    if move == "L":
+        new_pos = [pos[0] , pos[1]-1]
+        new_node = dict[grid[new_pos[0]][new_pos[1]]].copy()
+        go_back = "R"
+    elif move == "D":
+        new_pos = [pos[0]+1,pos[1]]
+        new_node = dict[grid[new_pos[0]][new_pos[1]]].copy()
+        go_back = "U"
+    elif move == "R":
+        new_pos = [pos[0], pos[1]+1]
+        new_node = dict[grid[new_pos[0]][new_pos[1]]].copy()
+        go_back = "L"
+    elif move == "U":
+        new_pos = [pos[0]-1,pos[1]]
+        new_node = dict[grid[new_pos[0]][new_pos[1]]].copy()
+        go_back = "D"
+    else:
+        print("something wrong bruv")
+    if go_back in new_node:
+        first_move = False
+        grid[pos[0]][pos[1]] = "#"
+        node = new_node
+        pos = new_pos
+    else:
+        if go_back == "D":
+            go_back = "U"
+        elif go_back == "R":
+            go_back = "L"
+        elif go_back == "U":
+            go_back = "D"
+        elif go_back == "L":
+            go_back = "R"
+        else:
+            print('somthing wrong bruv')
+        first_move = True
+        distance = -1
+
+    if pos==start and not first_move:
+        not_start = not not_start
+    distance+=1
+print(distance//2)
